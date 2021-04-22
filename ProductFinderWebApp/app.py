@@ -5,15 +5,10 @@ import logging
 import zipfile
 import urllib.request
 import numpy as np
-from sys import stdout
 from pathlib import Path
-from flask import Flask, flash, request, redirect, url_for, render_template, Response
-from flask_socketio import SocketIO, emit
-from werkzeug.utils import secure_filename
+from flask import Flask, flash, request, redirect, url_for, render_template
 from PIL import Image
 from src.mappingUtils import allowed_file, upload_exists, export_exists, img2arr, replaceRGBValue
-from src.camera import Camera
-from src.streamingUtils import base64_to_pil_image, pil_image_to_base64
 
 # Set up custom logs
 logger = logging.getLogger(__name__)
@@ -30,12 +25,10 @@ ALLOWED_EXTENSIONS = set(['zip'])
 
 # App configurations
 app = Flask(__name__)
-app.logger.addHandler(logging.StreamHandler(stdout))
 app.secret_key = 'b7af88817cf64764c250e7ef4e31117903a3da6d101851bc'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['EXPORT_FOLDER'] = EXPORT_FOLDER
-app.config['DEBUG'] = True
-socketio = SocketIO(app)
+app.config['DEBUG'] = False
 
 
 @app.route('/mapper.html')
@@ -214,4 +207,4 @@ def display_exports(filename):
     return redirect(url_for('static', filename='exports/' + filename), code=301)
 
 if __name__ == '__main__':
-    socketio.run(app)
+    app.run()

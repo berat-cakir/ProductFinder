@@ -1,0 +1,5 @@
+/node_modules
+**/generated
+/obj
+/out
+/package-lock.json

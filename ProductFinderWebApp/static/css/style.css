@@ -1,0 +1,84 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+.userContents {
+    display: block;
+    min-width: 640px;
+    width: 640px;
+    max-width: 640px;
+    margin-left: 15px;
+}
+
+.objectSelector {
+    float: left;
+    margin-top: 10px;
+    margin-right: 5px;
+}
+
+.colorPalette {
+    float: left;
+    width: 25px;
+    height: 25px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 5px;
+    text-align: center;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+#gridMapUpload{
+    margin-top: 10px;
+}
+
+.submitButtons {
+    float: left;
+}
+
+.generateButton {
+    background-color: rgb(150, 235, 120);
+}
+
+.deleteButton {
+    background-color: rgb(235, 120, 120);
+}
+
+.map {
+    margin-top: 10px;
+    display: block;
+    min-width: 640px;
+    width: 640px;
+    max-width: 640px;
+}
+
+table {
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+    border: none;
+    border-collapse: collapse;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+    table-layout: fixed;
+}
+
+td {
+    border: 1px solid black;
+    opacity: 0.75;
+}
+
+table td > div {
+    overflow: hidden;
+    text-align: center;
+    vertical-align: middle;
+    user-select: none; 
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none; 
+    -moz-user-select: none;
+    -ms-user-select: none;
+}

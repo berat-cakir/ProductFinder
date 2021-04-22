@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="apple-touch-icon" sizes="180x180" href="../static/favicon/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="../static/favicon/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="../static/favicon/favicon-16x16.png">
+        <link rel="manifest" href="../static/favicon/site.webmanifest">
+        <link rel="mask-icon" href="../static/favicon/safari-pinned-tab.svg" color="#5bbad5">
+        <meta name="msapplication-TileColor" content="#2b5797">
+        <meta name="theme-color" content="#ffffff">
+        <link rel="stylesheet" href="../static/css/style.css">
+        <title>Floor Plan Mapper</title>
+    </head>
+    <body>
+        {% if filename %}
+            <div class="userContents">
+                <h2>Floor plan mapping</h2>
+                <p>
+                    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <ul>
+                        {% for message in messages %}
+                        <li>{{ message }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                    {% endwith %}
+                </p>
+                <label id="x" value="{{ x }}"></label></br>
+                <label id="y" value="{{ y }}"></label></br>
+                <label id="scale" value="{{ scale }}"></label></br>
+                <label class="objectSelector">Object selector:</label>
+                <div id="objects">
+                    <div class="colorPalette" style="background-color: rgb(0,0,0); border: 3px solid rgb(255,0,0)"></div>
+                    <div class="colorPalette" style="background-color: rgb(150,150,150);"></div>
+                    <div class="colorPalette" style="background-color: rgb(0,150,200);"></div>
+                </div>
+                <div style="clear: left;"></div>
+                <label>Legend: Black = Wall | Grey = Marker | Blue = Product Shelf*</label></br>
+                <label>* Provide a marker in front of each shelf</label></br>
+                <form id="gridMapUpload" method="post" action="/mapper.html" enctype="multipart/form-data">
+                    <p>
+                        <input type="hidden" name="gridMap" value="None" size ="10" required>
+                    </p>
+                    <p>
+                        <div class="submitButtons">
+                            <input class="generateButton" type="submit" name="gridMapGenerate" value="Generate Map" onclick="gridMapExport();">
+                            <input class="deleteButton" type="submit" name="gridMapDelete" value="Delete floor plan" onclick="return confirm('Are you sure?');">
+                        </div>
+                    </p>
+                    <div style="clear: left;"></div>
+                </form>
+            </div>
+            <div class="map">
+                {% if gridMap %}
+                <p>
+                    <label id="gridMapDownload" value="{{ gridMap }}" style="display: none;"></label>
+                </p>
+                {% endif %}
+                <table id="occupancyGrid" background="../static/uploads/{{ filename }}">
+                </table></br>
+            </div>
+            <script type="text/javascript" src="../static/js/generateTable.js"></script>
+            <script type="text/javascript" src="../static/js/gridMapTools.js"></script>
+        {% endif %}
+        {% if not filename %}
+        <div class="userContents">
+            <h2>Select a zip file with floor plan to upload</h2>
+            <p>
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <ul>
+                    {% for message in messages %}
+                    <li>{{ message }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+                {% endwith %}
+            </p>
+            <form id="floorplanUpload" method="post" action="/mapper.html" enctype="multipart/form-data">
+                <p>
+                    <input type="file" name="file" autocomplete="off" required></br>
+                    <label>* Zip file must contain an image of floor plan (type png)</label></br>
+                </p>
+                <p>
+                    <label for="x">Length of x-axis in meters:</label>
+                    <input type="text" name="x" size="10" required>
+                </p>
+                <p>
+                    <label for="y">Length of y-axis in meters:</label>
+                    <input type="text" name="y" size="10" required>
+                </p>
+                <p>
+                    <label for="scale">Choose preferred scale:</label>
+                    <select name="scale" required>
+                      <option value="1" selected="selected">1:1 (1 meter)</option>
+                      <option value="2">1:2 (0.5 meter)</option>
+                      <option value="4">1:4 (0.25 meter)</option>
+                    </select>
+                </p>
+                <p>
+                    <input type="submit" value="Submit">
+                </p>
+            </form>
+        </div>
+        {% endif %}
+    </body>
+</html>

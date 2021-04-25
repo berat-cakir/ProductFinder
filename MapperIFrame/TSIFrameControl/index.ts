@@ -68,7 +68,7 @@ import {IInputs, IOutputs} from "./generated/ManifestTypes";
         private updateURL(): void
         {
 			// Build the entire URL
-            let url = "https://productfinderwebapp.azurewebsites.net/mapper.html";
+            let url = "https://productfinderwebapp.azurewebsites.net/navigator.html";
 			let iFrameSrc:string = url;
 			
             // Update the IFrame to point to the updated URL

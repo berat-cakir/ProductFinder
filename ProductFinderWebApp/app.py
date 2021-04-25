@@ -3,7 +3,6 @@ import re
 import shutil
 import logging
 import zipfile
-import urllib.request
 import numpy as np
 from pathlib import Path
 from flask import Flask, flash, request, redirect, url_for, render_template
@@ -20,7 +19,7 @@ EXPORT_FOLDER = 'static/exports/'
 Path(UPLOAD_FOLDER).mkdir(parents=True, exist_ok=True)
 Path(EXPORT_FOLDER).mkdir(parents=True, exist_ok=True)
 
-# Upload settings
+# Server settings
 ALLOWED_EXTENSIONS = set(['zip'])
 
 # App configurations
@@ -30,6 +29,18 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['EXPORT_FOLDER'] = EXPORT_FOLDER
 app.config['DEBUG'] = False
 
+
+@app.route('/navigator.html')
+def navigator():
+    return render_template('navigator.html')
+
+@app.route('/navigator.html', methods=['POST'])
+def navigator_upload():
+    markerID = request.form['markerID']
+    print(markerID)
+    import random
+    directions = ['0', '1', '2', '3']  # Left, Right, Top, Down
+    return random.choice(directions)
 
 @app.route('/mapper.html')
 def mapper():

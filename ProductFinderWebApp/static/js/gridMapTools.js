@@ -54,4 +54,4 @@ function gridMapExport() {
     var formInfo = document.forms['gridMapUpload'];
     output = output.substring(0, output.length - 1);
     formInfo.gridMap.value = output;
-}
+};

@@ -39,7 +39,7 @@ function tableCreate(tbl, mapXRounded, mapYRounded, mapScaleRounded, adjHeight) 
         tbdy.appendChild(tr);
     }
     tbl.appendChild(tbdy);
-}
+};
 
 // Display floor dimensions
 var mapX = document.getElementById('x'); 
@@ -62,4 +62,4 @@ img.onload = function() {
     var adjHeight = (640 * height / width);
     adjHeight = Math.round(adjHeight);
     tableCreate(tbl, mapXRounded, mapYRounded, mapScaleRounded, adjHeight);
-}
+};

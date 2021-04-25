@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <manifest>
-  <control namespace="SampleNamespace" constructor="TSIFrameControl" version="1.1.0" display-name-key="TS_IFrameControl_Display_Key" description-key="TS_IFrameControl_Desc_Key" control-type="standard">
+  <control namespace="ARNavigator001" constructor="TSIFrameControl" version="1.1.0" display-name-key="TS_IFrameControl_Display_Key" description-key="TS_IFrameControl_Desc_Key" control-type="standard">
     <property name="stringProperty" display-name-key="stringProperty_Display_Key" description-key="stringProperty_Desc_Key" of-type="SingleLine.Text" usage="bound" required="true" />
     <resources>
       <code path="index.ts" order="1" />

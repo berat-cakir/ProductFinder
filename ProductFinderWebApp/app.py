@@ -44,7 +44,7 @@ def navigator_upload():
     followDirection = '0'  # Unknown
 
     imageFile = 'noShelvesMap.png'
-    if export_exists(app.config['EXPORT_FOLDER'], imageFile=imageFile, includeImage=False):
+    if export_exists(app.config['EXPORT_FOLDER'], imageFile=imageFile, includeImage=False) and int(markerID) is not -1:
         # load the map
         gmap = OccupancyGridMap.from_png(os.path.join(app.config['EXPORT_FOLDER'], imageFile), 1)
 
@@ -69,7 +69,7 @@ def navigator_upload():
         else:
             print('Goal is not reachable')
     else:
-        print('No map')
+        print('No map or marker found')
     return followDirection
 
 @app.route('/mapper.html')

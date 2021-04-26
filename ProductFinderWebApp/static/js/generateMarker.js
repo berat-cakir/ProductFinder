@@ -36,13 +36,14 @@ function markerExport() {
         window.alert('No markers found. Please generate map with markers first.');
     } else {
         document.getElementsByClassName('downloadButton')[0].disabled = true;
-        var width = 600;
+        var width = 800;
         var height = width;
-        var nTiles = 8;
-        var padding = 3;
+        var nTiles = 12;
+        var padding = 2;
         var cornerLength = 4;
         var dx = width / nTiles;
         var dy = height / nTiles;
+        var correctionX = 15;
         var allMarkers = new Array();
         var zip = new JSZip();
         var canvas = document.createElement('canvas');
@@ -69,10 +70,10 @@ function markerExport() {
             ctx.fillRect(0, canvas.height - dy, cornerLength * dx, dy);
 
             // Draw marker and id
-            ctx.drawImage(makeMarker(i, width, height), padding * dx, padding * dy);
+            ctx.drawImage(makeMarker(i, width, height), (padding * dx) - correctionX, (padding * dy) - correctionX);
             ctx.font = 'bold 50px sans-serif';
             ctx.fillStyle = '#000000';
-            ctx.fillText('id: '+ i, 100, 150);
+            ctx.fillText('id: '+ i, 470, 50);
 
             allMarkers.push(dataURItoBlob(canvas.toDataURL('image/png')));
         }

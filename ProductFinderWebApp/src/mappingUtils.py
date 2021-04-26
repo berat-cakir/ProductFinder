@@ -19,13 +19,16 @@ def upload_exists(upload_folder):
                 return [filename, mapX, mapY, scale]
     return None
 
-def export_exists(export_folder):
+def export_exists(export_folder, imageFile='originalMap.png', includeImage=True):
     # Return exported file already exists
     for filename in os.listdir(export_folder):
-        if filename == 'originalMap.png':
+        if filename == imageFile:
+            if includeImage:
                 img = Image.open(os.path.join(export_folder, filename)).convert('RGB')
                 return np.array(img)
-    return None
+            else:
+                return True
+    return False
 
 def img2arr(img, arr2str=False):
     # Converts image to list

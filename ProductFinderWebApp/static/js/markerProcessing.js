@@ -5,8 +5,8 @@ var arScene = new Array();
 var arCamera = new Array();
 var model = new Array();
 var detectedMarker = -1;
-var direction = '0';
-var allDirections = ['0', '1', '2', '3'];  // Left, Right, Top, Down
+var direction = '0';  // Unknown
+var allDirections = ['0', '1', '2', '3', '4', '5', '6', '7', '8'];  // Unknown, R, U, L, D, RU, LU, LD, RD
 var modelSize = 70.0;  // Millimeters
 
 // Estimate end-device and screen orientation
@@ -22,7 +22,7 @@ fixOrientation = function(w, h) {
         }
     }
     return d;
-}
+};
 
 // Main function
 function onLoad() {

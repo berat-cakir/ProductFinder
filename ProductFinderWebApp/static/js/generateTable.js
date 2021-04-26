@@ -29,6 +29,7 @@ function tableCreate(tbl, mapXRounded, mapYRounded, mapScaleRounded, adjHeight) 
             if (td.style.getPropertyValue('background-color') == 'rgb(150, 150, 150)') {
                 div.appendChild(document.createTextNode(markerID));
                 td.appendChild(div);
+                document.getElementById('markerQuantity').value = markerID;
                 markerID = markerID + 1;
             } else {
                 div.appendChild(document.createTextNode('\u0020'));

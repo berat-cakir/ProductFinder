@@ -12,6 +12,11 @@
         <meta name="theme-color" content="#ffffff">
         <link rel="stylesheet" href="../static/css/style.css">
         <title>Floor Plan Mapper</title>
+        <script type="text/javascript" src="../static/js/libs/jszip.js"></script>
+        <script type="text/javascript" src="../static/js/libs/filesaver.js"></script>
+        <script type="text/javascript" src="../static/js/libs/cv.js"></script> 
+        <script type="text/javascript" src="../static/js/libs/aruco.js"></script> 
+        <script type="text/javascript" src="../static/js/libs/markers.js"></script> 
     </head>
     <body>
         {% if filename %}
@@ -38,7 +43,7 @@
                     <div class="colorPalette" style="background-color: rgb(0,150,200);"></div>
                 </div>
                 <div style="clear: left;"></div>
-                <label>Legend: Black = Wall | Grey = Marker | Blue = Product Shelf*</label></br>
+                <label>Black = Obstacle | Grey = Marker | Blue = Product Shelf*</label></br>
                 <label>* Provide a marker in front of each shelf</label></br>
                 <form id="gridMapUpload" method="post" action="/mapper.html" enctype="multipart/form-data">
                     <p>
@@ -47,7 +52,8 @@
                     <p>
                         <div class="submitButtons">
                             <input class="generateButton" type="submit" name="gridMapGenerate" value="Generate Map" onclick="gridMapExport();">
-                            <input class="deleteButton" type="submit" name="gridMapDelete" value="Delete floor plan" onclick="return confirm('Are you sure?');">
+                            <input class="downloadButton" type="button" name="markerDownload" value="Download Markers" onclick="markerExport();">
+                            <input class="deleteButton" type="submit" name="gridMapDelete" value="Delete Floor Plan" onclick="return confirm('Are you sure?');">
                         </div>
                     </p>
                     <div style="clear: left;"></div>
@@ -61,9 +67,11 @@
                 {% endif %}
                 <table id="occupancyGrid" background="../static/uploads/{{ filename }}">
                 </table></br>
+                <input type="hidden" id="markerQuantity" value="-1" size ="10">
             </div>
             <script type="text/javascript" src="../static/js/generateTable.js"></script>
             <script type="text/javascript" src="../static/js/gridMapTools.js"></script>
+            <script type="text/javascript" src="../static/js/generateMarker.js"></script>
         {% endif %}
         {% if not filename %}
         <div class="userContents">

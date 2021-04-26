@@ -44,6 +44,7 @@ document.querySelector('#occupancyGrid').addEventListener('click', function(even
 
 // Export grid map as string
 function gridMapExport() {
+    document.getElementById('markerQuantity').value = -1;
     var tbl = document.getElementById('occupancyGrid');
     var output = '';
     for (var i = 0, row; row = tbl.rows[i]; i++) {

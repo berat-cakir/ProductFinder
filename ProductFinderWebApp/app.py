@@ -4,10 +4,13 @@ import shutil
 import logging
 import zipfile
 import numpy as np
+from PIL import Image
 from pathlib import Path
 from flask import Flask, flash, request, redirect, url_for, render_template
-from PIL import Image
 from src.mappingUtils import allowed_file, upload_exists, export_exists, img2arr, replaceRGBValue
+from src.aStar import a_star, _get_movements_4n, _get_movements_8n
+from src.gridMap import OccupancyGridMap
+#from src.navigationUtils import plot_path
 
 # Set up custom logs
 logger = logging.getLogger(__name__)
@@ -38,9 +41,36 @@ def navigator():
 def navigator_upload():
     markerID = request.form['markerID']
     print(markerID)
-    import random
-    directions = ['0', '1', '2', '3']  # Left, Right, Top, Down
-    return random.choice(directions)
+    followDirection = '0'  # Unknown
+
+    imageFile = 'noShelvesMap.png'
+    if export_exists(app.config['EXPORT_FOLDER'], imageFile=imageFile, includeImage=False):
+        # load the map
+        gmap = OccupancyGridMap.from_png(os.path.join(app.config['EXPORT_FOLDER'], imageFile), 1)
+
+        # set a start and an end node (in meters)
+        start_node = gmap.get_all_nodes[int(markerID)]
+        goal_node = gmap.get_all_nodes[2]
+
+        # run A*
+        path, path_px = a_star(start_node, goal_node, gmap, movement='8N')
+
+        if path:
+            movements = _get_movements_8n()
+            for dx, dy, deltacost, direction in movements:
+                # determine new position
+                new_x = path_px[0][0] + dx
+                new_y = path_px[0][1] + dy
+                new_pos = (new_x, new_y)
+                if new_pos == path_px[1]:
+                    print(direction)
+                    followDirection = direction
+                    break
+        else:
+            print('Goal is not reachable')
+    else:
+        print('No map')
+    return followDirection
 
 @app.route('/mapper.html')
 def mapper():

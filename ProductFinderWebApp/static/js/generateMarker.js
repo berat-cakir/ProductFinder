@@ -29,8 +29,8 @@ function SaveAsFile(t, f, m) {
     }
 };
 
-// Export markers as zip file
-function markerExport() {
+// Generate markers as zip file
+function markerGenerate() {
     markerQuantity = parseInt(document.getElementById('markerQuantity').value);
     if (markerQuantity == -1) {
         window.alert('No markers found. Please generate map with markers first.');
@@ -52,7 +52,7 @@ function markerExport() {
             // Create canvas
             canvas.width = 2 * padding * dx + width;
             canvas.height = 2 * padding * dy + height;
-            var ctx = canvas.getContext('2d');
+            var ctx = canvas.getContext('2d', {alpha: false});
 
             // Clear background
             ctx.fillStyle = '#ffffff';
@@ -84,5 +84,13 @@ function markerExport() {
             SaveAsFile(content, 'markers.zip');
             document.getElementsByClassName('downloadButton')[0].disabled = false;
         });
+    }
+};
+
+// Export markers as pdf file
+function markerExport() {
+    markerQuantity = parseInt(document.getElementById('markerQuantity').value);
+    if (markerQuantity == -1) {
+        window.alert('No markers found. Please generate map with markers first.');
     }
 };

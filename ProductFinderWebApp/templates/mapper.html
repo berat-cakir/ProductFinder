@@ -12,11 +12,10 @@
         <meta name="theme-color" content="#ffffff">
         <link rel="stylesheet" href="../static/css/style.css">
         <title>Floor Plan Mapper</title>
+        <script type="text/javascript" src="../static/js/libs/markers.js"></script> 
         <script type="text/javascript" src="../static/js/libs/jszip.js"></script>
         <script type="text/javascript" src="../static/js/libs/filesaver.js"></script>
-        <script type="text/javascript" src="../static/js/libs/cv.js"></script> 
-        <script type="text/javascript" src="../static/js/libs/aruco.js"></script> 
-        <script type="text/javascript" src="../static/js/libs/markers.js"></script> 
+        <script type="text/javascript" src="../static/js/libs/jspdf.min.js"></script>
     </head>
     <body>
         {% if filename %}
@@ -48,11 +47,12 @@
                 <form id="gridMapUpload" method="post" action="/mapper.html" enctype="multipart/form-data">
                     <p>
                         <input type="hidden" name="gridMap" value="None" size ="10" required>
+                        <input type="hidden" id="markerQuantity" name="markers" value="-1" size ="10" required>
                     </p>
                     <p>
                         <div class="submitButtons">
                             <input class="generateButton" type="submit" name="gridMapGenerate" value="Generate Map" onclick="gridMapExport();">
-                            <input class="downloadButton" type="button" name="markerDownload" value="Download Markers" onclick="markerExport();">
+                            <input class="downloadButton" type="submit" name="markerDownload" value="Print Markers" onclick="markerExport();">
                             <input class="deleteButton" type="submit" name="gridMapDelete" value="Delete Floor Plan" onclick="return confirm('Are you sure?');">
                         </div>
                     </p>
@@ -67,7 +67,6 @@
                 {% endif %}
                 <table id="occupancyGrid" background="../static/uploads/{{ filename }}">
                 </table></br>
-                <input type="hidden" id="markerQuantity" value="-1" size ="10">
             </div>
             <script type="text/javascript" src="../static/js/generateTable.js"></script>
             <script type="text/javascript" src="../static/js/gridMapTools.js"></script>

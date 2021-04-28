@@ -3,10 +3,13 @@ import re
 import shutil
 import logging
 import zipfile
+import img2pdf
 import numpy as np
 from PIL import Image
 from pathlib import Path
+from markupsafe import Markup
 from flask import Flask, flash, request, redirect, url_for, render_template
+from werkzeug.middleware.proxy_fix import ProxyFix
 from src.mappingUtils import allowed_file, upload_exists, export_exists, img2arr, replaceRGBValue
 from src.aStar import a_star, _get_movements_4n, _get_movements_8n
 from src.gridMap import OccupancyGridMap
@@ -19,18 +22,36 @@ logging.basicConfig(format='Logs: %(asctime)s %(message)s', datefmt='%m/%d/%Y %I
 # Static folders
 UPLOAD_FOLDER = 'static/uploads/'
 EXPORT_FOLDER = 'static/exports/'
+MARKERS_FOLDER = 'static/markers/markers1000/'
 Path(UPLOAD_FOLDER).mkdir(parents=True, exist_ok=True)
 Path(EXPORT_FOLDER).mkdir(parents=True, exist_ok=True)
+Path(MARKERS_FOLDER).mkdir(parents=True, exist_ok=True)
 
 # Server settings
 ALLOWED_EXTENSIONS = set(['zip'])
+CONVERT_MARKER_TO_RGB = False
+FORCE_HTTPS = True
 
 # App configurations
 app = Flask(__name__)
+if FORCE_HTTPS:
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 app.secret_key = 'b7af88817cf64764c250e7ef4e31117903a3da6d101851bc'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['EXPORT_FOLDER'] = EXPORT_FOLDER
+app.config['MARKERS_FOLDER'] = MARKERS_FOLDER
 app.config['DEBUG'] = False
+
+# Marker processing
+shutil.rmtree(app.config['MARKERS_FOLDER'])
+Path(MARKERS_FOLDER).mkdir(parents=True, exist_ok=True)
+with zipfile.ZipFile(os.path.join('static/markers/', 'markers1000.zip'), 'r') as zip_ref:
+    zip_ref.extractall(app.config['MARKERS_FOLDER'])
+if CONVERT_MARKER_TO_RGB:
+    for marker in range(1000):
+        imgPath = os.path.join(app.config['MARKERS_FOLDER'], str(marker) + '.png')
+        img = Image.open(imgPath).convert('RGB')
+        img.save(imgPath, 'PNG')
 
 
 @app.route('/navigator.html')
@@ -44,7 +65,7 @@ def navigator_upload():
     followDirection = '0'  # Unknown
 
     imageFile = 'noShelvesMap.png'
-    if export_exists(app.config['EXPORT_FOLDER'], imageFile=imageFile, includeImage=False) and int(markerID) is not -1:
+    if export_exists(app.config['EXPORT_FOLDER'], imageFile=imageFile, includeImage=False) and int(markerID) != -1:
         # load the map
         gmap = OccupancyGridMap.from_png(os.path.join(app.config['EXPORT_FOLDER'], imageFile), 1)
 
@@ -160,6 +181,29 @@ def mapper_upload():
 
         # Check if grid map is empty
         if gridMap == '' or gridMap == 'None':
+
+            # Send exported file to client if it exists
+            eFile = export_exists(app.config['EXPORT_FOLDER'])
+            if hasattr(eFile, 'shape'):
+                gridMap = img2arr(eFile, arr2str=True)
+
+            # Check if markers were provided
+            if 'markerDownload' in request.form and 'markers' in request.form:
+                markers = request.form['markers']
+                if markers != '-1':
+
+                    # Generate pdf file out of markers
+                    allMarkers = []
+                    for marker in range(int(markers)):
+                        imgPath = os.path.join(app.config['MARKERS_FOLDER'], str(marker) + '.png')
+                        allMarkers.append(imgPath)
+                    with open(os.path.join(app.config['MARKERS_FOLDER'], 'markers.pdf'), 'wb') as f:
+                        f.write(img2pdf.convert(allMarkers[:int(markers) + 1]))
+                    if hasattr(eFile, 'shape'):
+                        flash(Markup('Your markers were successfully created. </br> Copy and open this link in your browser to print them: </br> <a href="https://' + \
+                                    request.url.split('/')[2] + '/markers.pdf">https://' + request.url.split('/')[2] + '/markers.pdf </a>'))
+                        return render_template('mapper.html', filename=uFile[0], x=uFile[1], y=uFile[2], scale=uFile[3], gridMap=gridMap)
+
             # Delete uploaded floor map and exported grid map if requested
             if 'gridMapDelete' in request.form:
                 shutil.rmtree(app.config['UPLOAD_FOLDER'])
@@ -169,8 +213,11 @@ def mapper_upload():
                 flash('Floor plan successfully deleted')  
                 return render_template('mapper.html')
             else: 
-                flash('No map provided for uploading')  
-                return render_template('mapper.html', filename=uFile[0], x=uFile[1], y=uFile[2], scale=uFile[3])
+                if hasattr(eFile, 'shape'):
+                    return render_template('mapper.html', filename=uFile[0], x=uFile[1], y=uFile[2], scale=uFile[3], gridMap=gridMap)
+                else:
+                    flash('No map provided for uploading')
+                    return render_template('mapper.html', filename=uFile[0], x=uFile[1], y=uFile[2], scale=uFile[3])
 
         # Check if grid map was provided
         if gridMap:
@@ -246,6 +293,11 @@ def display_uploads(filename):
 def display_exports(filename):
     # Provide static export files to display in URL format
     return redirect(url_for('static', filename='exports/' + filename), code=301)
+
+@app.route('/<filename>')
+def display_markers(filename):
+    # Provide static markers to display in URL format
+    return redirect(url_for('static', filename='markers/markers1000/' + filename), code=301)
 
 if __name__ == '__main__':
     app.run()

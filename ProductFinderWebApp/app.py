@@ -194,7 +194,8 @@ def mapper_upload():
 
                     # Generate pdf file out of markers
                     allMarkers = []
-                    for marker in range(int(markers)):
+                    print(markers)
+                    for marker in range(int(markers) + 1):
                         imgPath = os.path.join(app.config['MARKERS_FOLDER'], str(marker) + '.png')
                         allMarkers.append(imgPath)
                     with open(os.path.join(app.config['MARKERS_FOLDER'], 'markers.pdf'), 'wb') as f:

@@ -216,7 +216,6 @@ def mapper_upload():
                 if hasattr(eFile, 'shape'):
                     return render_template('mapper.html', filename=uFile[0], x=uFile[1], y=uFile[2], scale=uFile[3], gridMap=gridMap)
                 else:
-                    flash('No map provided for uploading')
                     return render_template('mapper.html', filename=uFile[0], x=uFile[1], y=uFile[2], scale=uFile[3])
 
         # Check if grid map was provided

@@ -146,7 +146,7 @@ function createTexture() {
 function createModel(direction) {
     var object = new THREE.Object3D(),
         geometry = new THREE.PlaneBufferGeometry(1.0, 1.0, 0.0),
-        texture = THREE.ImageUtils.loadTexture('../static/textures/' + direction + '.jpg'),
+        texture = THREE.ImageUtils.loadTexture('../static/textures/' + direction + '.png'),
         material = new THREE.MeshBasicMaterial( {map: texture, depthTest: false, depthWrite: false} ),
         mesh = new THREE.Mesh(geometry, material);
     texture.minFilter = THREE.LinearFilter;

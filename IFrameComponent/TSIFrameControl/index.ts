@@ -50,7 +50,8 @@ import {IInputs, IOutputs} from "./generated/ManifestTypes";
                 this.renderIFrame();
             }
 
-            this.updateURL();
+            let src: string = context.parameters.srcValue.raw!;
+            this.updateURL(src);
         }
 
         /** 
@@ -65,11 +66,10 @@ import {IInputs, IOutputs} from "./generated/ManifestTypes";
         /**
          * Updates the URL of the IFrame to display the updated content
          */
-        private updateURL(): void
+        private updateURL(src: string): void
         {
 			// Build the entire URL
-            let url = "https://productfinderwebapp.azurewebsites.net/navigator.html";
-			let iFrameSrc:string = url;
+			let iFrameSrc: string = src;
 			
             // Update the IFrame to point to the updated URL
             this._webAppIFrame.setAttribute("src", iFrameSrc);

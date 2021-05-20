@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="TS_IFrameControl_Display_Key" xml:space="preserve">
-    <value>AR Navigator</value>
+    <value>IFrameComponent</value>
     <comment>Display text for IFrameControl</comment>
   </data>
   <data name="TS_IFrameControl_Desc_Key" xml:space="preserve">
@@ -132,5 +132,9 @@
   <data name="stringProperty_Desc_Key" xml:space="preserve">
     <value>StringProperty</value>
     <comment>Display text for StringProperty description</comment>
+  </data>
+  <data name="src" xml:space="preserve">
+    <value>Source</value>
+    <comment>Display text for Source description</comment>
   </data>
 </root>

@@ -1,6 +1,6 @@
-# Power Apps component framework: IFRAME component
+# Power Apps component framework: Map component
 
-This sample describes how to bind a code component to different fields on the form and use the value of these fields as input properties to the component.
+This sample component changes the user experience of interacting with address columns on the form. Along with the text values of the address, this component provides the ability to visually identify a particular address on a map without navigating to another tab or screen. 
 
 ## Before you can try the sample components
 
@@ -15,3 +15,20 @@ To try the sample components, you must first:
    - Option 2: Install [.NET Core 3.1 SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) and then install [Visual Studio Code](https://code.visualstudio.com/Download).
 
 1. Install [Microsoft Power Apps CLI](https://aka.ms/PowerAppsCLI).
+1. [Download](https://github.com/microsoft/PowerApps-Samples/tree/master/component-framework) the sample components so that you have a local copy.
+
+## What this sample does
+
+In the manifest file, we defined property of type Single line of Text. We use this to bind it to the address columns on the form. Create a variable name `MAPS_API_KEY` that can be accessed in the context of the component. Google Map API allows you only to render the maps inside an `IFRAME`. So, you need to create an IFRAME element that is going to render the map using the URL we generate. By default, we are setting the map to be hidden and display it only when the address value exists on the form.
+
+`buildMapUrl` and `renderMap` (you can even merge them into one) takes the address string and embeds it onto the map URL by encoding the address string and then sets the IFRAME element’s src element to the URL respectively. Also, call the `notifyOutputChanged` method to ensure we notify the component that the rendering has changed.
+
+## How to run the sample
+
+See [How to run the sample components](https://github.com/microsoft/PowerApps-Samples/blob/master/component-framework/README.md) for more information about how to build and import components into Microsoft Dataverse.
+
+## See also
+
+[Power Apps component framework overview](https://docs.microsoft.com/en-us/powerapps/developer/component-framework/overview)<br/>
+[Power Apps component framework API reference](https://docs.microsoft.com/en-us/powerapps/developer/component-framework/reference/)<br/>
+[Power Apps component framework manifest schema reference](https://docs.microsoft.com/en-us/powerapps/developer/component-framework/manifest-schema-reference/)

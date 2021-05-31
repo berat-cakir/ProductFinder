@@ -83,7 +83,6 @@ function onLoad() {
             type: 'POST',
             success: function(response) {
                 direction = response;
-                document.getElementById('markerID').innerHTML = detectedMarker;
             },
             error: function(error) {
                 console.log(error);

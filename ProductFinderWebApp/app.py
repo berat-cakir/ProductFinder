@@ -71,7 +71,7 @@ def navigator_upload():
 
         # set a start and an end node (in meters)
         start_node = gmap.get_all_nodes[int(markerID)]
-        goal_node = gmap.get_all_nodes[2]
+        goal_node = gmap.get_all_nodes[66]
 
         # run A*
         path, path_px = a_star(start_node, goal_node, gmap, movement='8N')

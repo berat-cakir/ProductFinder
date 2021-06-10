@@ -3,6 +3,7 @@
   <control namespace="IFrameComponent" constructor="TSIFrameControl" version="1.1.0" display-name-key="TS_IFrameControl_Display_Key" description-key="TS_IFrameControl_Desc_Key" control-type="standard">
     <property name="stringProperty" display-name-key="stringProperty_Display_Key" description-key="stringProperty_Desc_Key" of-type="SingleLine.Text" usage="bound" required="true" />
     <property name="srcValue" display-name-key="URL_Value" description-key="src" of-type="SingleLine.Text" usage="bound" required="true" />
+    <property name="markerID" display-name-key="markerID" description-key="markerID" of-type="SingleLine.Text" usage="bound" required="true" />
     <resources>
       <code path="index.ts" order="1" />
       <css path="css/TS_IFrameControl.css" order="2" />

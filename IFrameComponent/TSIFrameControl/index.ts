@@ -51,7 +51,8 @@ import {IInputs, IOutputs} from "./generated/ManifestTypes";
             }
 
             let src: string = context.parameters.srcValue.raw!;
-            this.updateURL(src);
+            let markerID: string = context.parameters.markerID.raw!;
+            this.updateURL(src, markerID);
         }
 
         /** 
@@ -66,10 +67,11 @@ import {IInputs, IOutputs} from "./generated/ManifestTypes";
         /**
          * Updates the URL of the IFrame to display the updated content
          */
-        private updateURL(src: string): void
+        private updateURL(src: string, markerID: string): void
         {
 			// Build the entire URL
 			let iFrameSrc: string = src;
+            iFrameSrc = iFrameSrc + "?selectedmarkerid=" + markerID;
 			
             // Update the IFrame to point to the updated URL
             this._webAppIFrame.setAttribute("src", iFrameSrc);

@@ -11,9 +11,8 @@ from markupsafe import Markup
 from flask import Flask, flash, request, redirect, url_for, render_template
 from werkzeug.middleware.proxy_fix import ProxyFix
 from src.mappingUtils import allowed_file, upload_exists, export_exists, img2arr, replaceRGBValue
-from src.aStar import a_star, _get_movements_4n, _get_movements_8n
+from src.aStar import a_star, _get_movements_8n
 from src.gridMap import OccupancyGridMap
-#from src.navigationUtils import plot_path
 
 # Set up custom logs
 logger = logging.getLogger(__name__)
@@ -31,6 +30,7 @@ Path(MARKERS_FOLDER).mkdir(parents=True, exist_ok=True)
 ALLOWED_EXTENSIONS = set(['zip'])
 CONVERT_MARKER_TO_RGB = False
 FORCE_HTTPS = True
+SELECTED_MARKER_ID = 0
 
 # App configurations
 app = Flask(__name__)
@@ -54,37 +54,48 @@ if CONVERT_MARKER_TO_RGB:
         img.save(imgPath, 'PNG')
 
 
-@app.route('/navigator.html')
-def navigator():
+@app.route('/navigator.html', methods=['GET'])
+def navigator_marker_upload():
+    global SELECTED_MARKER_ID
+    SELECTED_MARKER_ID = request.args.get('selectedmarkerid')
+    if SELECTED_MARKER_ID is None:
+        SELECTED_MARKER_ID = '0'
     return render_template('navigator.html')
+
 
 @app.route('/navigator.html', methods=['POST'])
 def navigator_upload():
     markerID = request.form['markerID']
-    print(markerID)
     followDirection = '0'  # Unknown
+
+    print("Current location: ", markerID)
+    print("Destination: ", SELECTED_MARKER_ID)
 
     imageFile = 'noShelvesMap.png'
     if export_exists(app.config['EXPORT_FOLDER'], imageFile=imageFile, includeImage=False) and int(markerID) != -1:
-        # load the map
+
+        if int(SELECTED_MARKER_ID) == int(markerID):
+            print('Goal reached')
+            return '9'
+
+        # Load the map
         gmap = OccupancyGridMap.from_png(os.path.join(app.config['EXPORT_FOLDER'], imageFile), 1)
 
-        # set a start and an end node (in meters)
+        # Set a start and end node (in meters)
         start_node = gmap.get_all_nodes[int(markerID)]
-        goal_node = gmap.get_all_nodes[66]
+        goal_node = gmap.get_all_nodes[int(SELECTED_MARKER_ID)]
 
-        # run A*
+        # Run A*
         path, path_px = a_star(start_node, goal_node, gmap, movement='8N')
 
         if path:
             movements = _get_movements_8n()
-            for dx, dy, deltacost, direction in movements:
+            for dx, dy, _, direction in movements:
                 # determine new position
                 new_x = path_px[0][0] + dx
                 new_y = path_px[0][1] + dy
                 new_pos = (new_x, new_y)
                 if new_pos == path_px[1]:
-                    print(direction)
                     followDirection = direction
                     break
         else:
